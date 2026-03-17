@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { api } from "../../config/api.js";
+import { api, clearAuthToken, setAuthToken } from "../../config/api.js";
 
 // Return user if loggedin
 export const checkAuth = createAsyncThunk(
@@ -9,6 +9,7 @@ export const checkAuth = createAsyncThunk(
       const response = await api.get(`/user`);
       return response.data;
     } catch (error) {
+      clearAuthToken();
       return rejectWithValue("Not authenticated");
     }
   },
@@ -19,12 +20,15 @@ export const login = createAsyncThunk(
   "auth/login",
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      await api.post(`/auth/login`, { email, password });
+      const loginResponse = await api.post(`/auth/login`, { email, password });
+      const token = loginResponse?.data?.token;
+      if (token) setAuthToken(token);
 
       const response = await api.get(`/user`);
 
       return response.data;
     } catch (error) {
+      clearAuthToken();
       return rejectWithValue(error.response?.data?.error || "Login failed");
     }
   },
@@ -35,10 +39,19 @@ export const signup = createAsyncThunk(
   "auth/signup",
   async ({ name, email, password, role }, { rejectWithValue }) => {
     try {
-      await api.post(`/auth/signup`, { name, email, password, role });
+      const signupResponse = await api.post(`/auth/signup`, {
+        name,
+        email,
+        password,
+        role,
+      });
+      const token = signupResponse?.data?.token;
+      if (token) setAuthToken(token);
+
       const response = await api.get(`/user`);
       return response.data;
     } catch (error) {
+      clearAuthToken();
       return rejectWithValue(error.response?.data?.error || "Signup failed");
     }
   },
@@ -50,8 +63,10 @@ export const logout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await api.post(`/auth/logout`, {});
+      clearAuthToken();
       return null;
     } catch (error) {
+      clearAuthToken();
       return rejectWithValue("Logout failed");
     }
   },

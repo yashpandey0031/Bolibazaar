@@ -1,4 +1,5 @@
 import { io } from "socket.io-client";
+import { getAuthToken } from "./api.js";
 
 const SOCKET_URL = import.meta.env.VITE_API;
 
@@ -20,6 +21,10 @@ export const getSocket = () => {
 
 export const connectSocket = () => {
   const s = getSocket();
+  s.auth = {
+    token: getAuthToken(),
+  };
+
   if (!s.connected) {
     s.connect();
   }

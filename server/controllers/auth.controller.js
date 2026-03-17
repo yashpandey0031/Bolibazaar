@@ -25,7 +25,9 @@ export const handleUserLogin = async (req, res) => {
 
     // Check if user is suspended
     if (user.status === "suspended") {
-      return res.status(403).json({ error: "Your account has been suspended. Contact admin." });
+      return res
+        .status(403)
+        .json({ error: "Your account has been suspended. Contact admin." });
     }
 
     // generating jwt token
@@ -57,7 +59,7 @@ export const handleUserLogin = async (req, res) => {
     });
     await login.save();
 
-    return res.status(200).json({ message: "Login Successful" });
+    return res.status(200).json({ message: "Login Successful", token });
   } catch (error) {
     console.error("Login Error:", error);
     return res.status(500).json({ error: "Server error from handle login" });
@@ -93,7 +95,6 @@ export const handleUserSignup = async (req, res) => {
 
     // Hashing user password
     const hashedPassword = await bcrypt.hash(password, 10);
-
 
     // Saving user to database
     const STARTER_CREDITS = 100;
@@ -134,7 +135,9 @@ export const handleUserSignup = async (req, res) => {
     // Set HTTP-only cookie
     setCookie(res, token);
 
-    return res.status(201).json({ message: "User registered successfully" });
+    return res
+      .status(201)
+      .json({ message: "User registered successfully", token });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Server error" });
