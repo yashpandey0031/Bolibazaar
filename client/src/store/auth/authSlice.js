@@ -22,7 +22,9 @@ export const login = createAsyncThunk(
     try {
       const loginResponse = await api.post(`/auth/login`, { email, password });
       const token = loginResponse?.data?.token;
+      const user = loginResponse?.data?.user;
       if (token) setAuthToken(token);
+      if (user) return { user };
 
       const response = await api.get(`/user`);
 
@@ -46,7 +48,9 @@ export const signup = createAsyncThunk(
         role,
       });
       const token = signupResponse?.data?.token;
+      const user = signupResponse?.data?.user;
       if (token) setAuthToken(token);
+      if (user) return { user };
 
       const response = await api.get(`/user`);
       return response.data;

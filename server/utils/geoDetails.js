@@ -1,29 +1,55 @@
 import axios from "axios";
 
+const GEO_TIMEOUT_MS = 1800;
+
+const normalizeIp = (ip = "") => ip.replace(/^::ffff:/, "").trim();
+
+const isPrivateOrLocalIp = (ip = "") => {
+  if (!ip) return true;
+
+  return (
+    ip === "::1" ||
+    ip === "127.0.0.1" ||
+    ip.startsWith("10.") ||
+    ip.startsWith("192.168.") ||
+    /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(ip) ||
+    ip.startsWith("fc") ||
+    ip.startsWith("fd") ||
+    ip.startsWith("fe80")
+  );
+};
+
+const defaultLocation = {
+  country: "Unknown",
+  region: "Unknown",
+  city: "Unknown",
+  isp: "Unknown",
+};
+
 export const getLocationFromIp = async (ip) => {
-  const defaultLocation = {
-    country: "Unknown",
-    region: "Unknown",
-    city: "Unknown",
-    isp: "Unknown",
-  };
+  const cleanIp = normalizeIp(ip);
+
+  if (!cleanIp || isPrivateOrLocalIp(cleanIp)) {
+    return defaultLocation;
+  }
 
   try {
-    // Note: ip-api.com free tier only supports HTTP.
-    // Consider switching to ipapi.co or ipinfo.io for HTTPS support.
-    const response = await axios.get(`http://ip-api.com/json/${ip}`);
-    if (response.data.status === "success") {
+    const response = await axios.get(`https://ipwho.is/${cleanIp}`, {
+      timeout: GEO_TIMEOUT_MS,
+    });
+
+    if (response.data?.success !== false) {
       return {
-        country: response.data.country,
-        region: response.data.regionName,
-        city: response.data.city,
-        isp: response.data.isp,
+        country: response.data?.country || "Unknown",
+        region: response.data?.region || "Unknown",
+        city: response.data?.city || "Unknown",
+        isp: response.data?.connection?.isp || "Unknown",
       };
-    } else {
-      return defaultLocation;
     }
+
+    return defaultLocation;
   } catch (error) {
-    console.log("Geo API error:", error.message);
+    console.log("Geo API timeout/failure:", error.message);
     return defaultLocation;
   }
 };
@@ -32,5 +58,5 @@ export const getClientIp = (req) => {
   const forwarded = req.headers["x-forwarded-for"];
   // x-forwarded-for may contain multiple IPs: "client, proxy1, proxy2"
   const ip = forwarded ? forwarded.split(",")[0].trim() : null;
-  return ip || req.socket.remoteAddress || req.ip;
+  return normalizeIp(ip || req.socket.remoteAddress || req.ip || "");
 };

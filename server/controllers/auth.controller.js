@@ -6,6 +6,15 @@ import { generateToken } from "../utils/jwt.js";
 import { getClientIp, getLocationFromIp } from "../utils/geoDetails.js";
 import { clearCookie, setCookie } from "../utils/cookies.util.js";
 
+const mapAuthUser = (user) => ({
+  _id: user._id,
+  name: user.name,
+  email: user.email,
+  avatar: user.avatar,
+  role: user.role,
+  credits: user.credits,
+});
+
 export const handleUserLogin = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -36,30 +45,41 @@ export const handleUserLogin = async (req, res) => {
     // Set HTTP-only cookie
     setCookie(res, token);
 
-    // Getting user gro location
+    // Getting user geo location
     const ip = getClientIp(req);
     const userAgent = req.headers["user-agent"];
-    const location = await getLocationFromIp(ip);
+    const safeUser = mapAuthUser(user);
 
-    // Update user's last login and location
-    await User.findByIdAndUpdate(user._id, {
-      lastLogin: new Date(),
-      location: location,
-      ipAddress: ip,
-      userAgent: userAgent,
-    });
+    // Respond first to keep login snappy; tracking runs in the background.
+    res
+      .status(200)
+      .json({ message: "Login Successful", token, user: safeUser });
 
-    // Saving login details
-    const login = new Login({
-      userId: user._id,
-      ipAddress: ip,
-      userAgent,
-      location,
-      loginAt: new Date(),
-    });
-    await login.save();
+    void (async () => {
+      try {
+        const location = await getLocationFromIp(ip);
 
-    return res.status(200).json({ message: "Login Successful", token });
+        await Promise.allSettled([
+          User.findByIdAndUpdate(user._id, {
+            lastLogin: new Date(),
+            location,
+            ipAddress: ip,
+            userAgent,
+          }),
+          Login.create({
+            userId: user._id,
+            ipAddress: ip,
+            userAgent,
+            location,
+            loginAt: new Date(),
+          }),
+        ]);
+      } catch (trackingError) {
+        console.error("Login tracking error:", trackingError.message);
+      }
+    })();
+
+    return;
   } catch (error) {
     console.error("Login Error:", error);
     return res.status(500).json({ error: "Server error from handle login" });
@@ -91,10 +111,10 @@ export const handleUserSignup = async (req, res) => {
     // Getting geo details
     const ip = getClientIp(req);
     const userAgent = req.headers["user-agent"];
-    const location = await getLocationFromIp(ip);
-
-    // Hashing user password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const [location, hashedPassword] = await Promise.all([
+      getLocationFromIp(ip),
+      bcrypt.hash(password, 10),
+    ]);
 
     // Saving user to database
     const STARTER_CREDITS = 100;
@@ -120,24 +140,29 @@ export const handleUserSignup = async (req, res) => {
       reason: "Welcome bonus — starter credits on signup",
     });
 
-    const login = new Login({
-      userId: newUser._id,
-      ipAddress: ip,
-      userAgent,
-      location,
-      loginAt: new Date(),
-    });
-    await login.save();
-
     // Generating jwt token
     const token = generateToken(newUser._id, newUser.role);
 
     // Set HTTP-only cookie
     setCookie(res, token);
 
-    return res
+    const safeUser = mapAuthUser(newUser);
+
+    res
       .status(201)
-      .json({ message: "User registered successfully", token });
+      .json({ message: "User registered successfully", token, user: safeUser });
+
+    void Login.create({
+      userId: newUser._id,
+      ipAddress: ip,
+      userAgent,
+      location,
+      loginAt: new Date(),
+    }).catch((trackingError) => {
+      console.error("Signup login-tracking error:", trackingError.message);
+    });
+
+    return;
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Server error" });
