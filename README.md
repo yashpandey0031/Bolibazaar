@@ -1,3 +1,5 @@
+Note - when accessing the deployment , it might take few seconds for the deployment to run , its normal and intended , give it a few seconds
+
 <a id="top"></a>
 
 <div align="center">
