@@ -448,7 +448,7 @@ Distributed under the **MIT License**. See [LICENSE](LICENSE) for more informati
 
 ---
 
-**Build by [Yash Pandey](https://github.com/yashpandey0031) and Om Patil**
+**Build by [Yash Pandey](https://github.com/yashpandey0031) and [Om Patil](https://github.com/Omkarop0808)**
 
 If this project helped you, consider giving it a ⭐
 
