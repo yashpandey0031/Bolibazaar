@@ -6,7 +6,7 @@
 
 # बोलीबाज़ार
 
-### Bolibazaar
+
 
 ### A full-stack real-time auction platform built with the MERN stack
 
