@@ -42,7 +42,7 @@
 </td>
 <td width="33%" align="center">
 <b>Auction House</b><br><br>
-<a href="screenshots/Auctionhouse.png"><img src="screenshots/Auctionhouse.png" alt="Auction House" /></a>
+<a href="screenshots/auctionhouse.png"><img src="screenshots/auctionhouse.png" alt="Auction House" /></a>
 </td>
 <td width="33%" align="center">
 <b>Admin Dashboard</b><br><br>
@@ -448,7 +448,7 @@ Distributed under the **MIT License**. See [LICENSE](LICENSE) for more informati
 
 ---
 
-**Built by [Yash Pandey](https://github.com/yashpandey0031) and Om Patil**
+**Build by [Yash Pandey](https://github.com/yashpandey0031) and Om Patil**
 
 If this project helped you, consider giving it a ⭐
 
