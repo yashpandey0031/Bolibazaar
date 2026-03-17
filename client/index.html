@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>बोली बाज़ार - Real-time Auction Platform</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#4f46e5" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="बोली बाज़ार is a real-time auction platform built with the MERN stack. Create auctions, bid in real-time, earn credits, and win products online."
+    />
+    <meta
+      name="keywords"
+      content="बोली बाज़ार, online auction, real-time bidding, MERN stack, auction platform, credit system, AI auction descriptions"
+    />
+    <meta name="author" content="Omkar Patil" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph for Social Sharing -->
+    <meta
+      property="og:title"
+      content="बोली बाज़ार - Real-time Auction Platform"
+    />
+    <meta
+      property="og:description"
+      content="A full-stack real-time auction platform with credit system, AI-powered descriptions, analytics, and smart recommendations."
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="बोली बाज़ार" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="बोली बाज़ार - Real-time Auction Platform"
+    />
+    <meta
+      name="twitter:description"
+      content="A full-stack real-time auction platform with credit system, AI-powered descriptions, and smart recommendations."
+    />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "बोली बाज़ार",
+        "description": "Real-time online bidding platform built with the MERN stack. Create auctions, place bids, earn credits, and win items.",
+        "author": {
+          "@type": "Person",
+          "name": "Omkar Patil",
+          "url": "https://github.com/Omkarop0808"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        const isLocalhost =
+          location.hostname === "localhost" ||
+          location.hostname === "127.0.0.1" ||
+          location.hostname === "[::1]";
+
+        if (isLocalhost) {
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            registrations.forEach((registration) => registration.unregister());
+          });
+          if ("caches" in window) {
+            caches.keys().then((keys) => {
+              keys.forEach((key) => caches.delete(key));
+            });
+          }
+        } else {
+          window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/sw.js").catch(() => {});
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

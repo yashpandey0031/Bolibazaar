@@ -1,0 +1,219 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Hind:wght@400;500;600&family=Manrope:wght@400;500;600;700&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* Custom Colors - Forest Green Palette */
+  --color-primary-50: #f2f7f5;
+  --color-primary-100: #e3eee9;
+  --color-primary-200: #c6ddd3;
+  --color-primary-300: #a5c8b8;
+  --color-primary-400: #7fad97;
+  --color-primary-500: #5b9278;
+  --color-primary-600: #44755f;
+  --color-primary-700: #355d4c;
+  --color-primary-800: #29483b;
+  --color-primary-900: #1d332a;
+
+  --color-accent-100: #f2f4ef;
+  --color-accent-300: #d9dfd0;
+  --color-accent-500: #98a58a;
+  --color-accent-700: #64715d;
+
+  /* Custom Font Families */
+  --font-heading: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Manrope", "Segoe UI", sans-serif;
+
+  /* Custom Box Shadows */
+  --shadow-soft:
+    0 2px 8px rgba(18, 40, 33, 0.05), 0 8px 18px rgba(18, 40, 33, 0.04);
+  --shadow-medium:
+    0 5px 16px rgba(18, 40, 33, 0.07), 0 12px 30px rgba(18, 40, 33, 0.06);
+  --shadow-large:
+    0 10px 24px rgba(18, 40, 33, 0.09), 0 20px 44px rgba(18, 40, 33, 0.08);
+  --shadow-sky:
+    0 6px 18px rgba(68, 117, 95, 0.16), 0 10px 30px rgba(68, 117, 95, 0.12);
+
+  /* Custom Animations */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-slide-in: slideIn 0.3s ease-out;
+  --animate-fade-in: fadeIn 0.5s ease-out;
+
+  /* Custom Keyframes */
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes slideIn {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
+
+@layer base {
+  :root {
+    /* shadcn/ui CSS Variables - Light Mode */
+    --background: 120 20% 98%;
+    --foreground: 156 18% 18%;
+    --card: 0 0% 100%;
+    --card-foreground: 156 18% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 156 18% 18%;
+    --primary: 155 30% 28%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 138 18% 94%;
+    --secondary-foreground: 154 15% 24%;
+    --muted: 140 14% 95%;
+    --muted-foreground: 155 8% 43%;
+    --accent: 92 18% 90%;
+    --accent-foreground: 102 16% 24%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 145 12% 86%;
+    --input: 145 12% 86%;
+    --ring: 155 30% 28%;
+    --radius: 0.75rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    /* shadcn/ui CSS Variables - Dark Mode */
+    --background: 156 16% 10%;
+    --foreground: 120 16% 96%;
+    --card: 156 16% 10%;
+    --card-foreground: 120 16% 96%;
+    --popover: 156 16% 10%;
+    --popover-foreground: 120 16% 96%;
+    --primary: 155 28% 42%;
+    --primary-foreground: 155 24% 10%;
+    --secondary: 156 12% 17%;
+    --secondary-foreground: 120 16% 96%;
+    --muted: 156 12% 17%;
+    --muted-foreground: 145 8% 68%;
+    --accent: 102 10% 22%;
+    --accent-foreground: 120 16% 96%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 156 10% 22%;
+    --input: 156 10% 22%;
+    --ring: 155 28% 42%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+    font-family: var(--font-body);
+    background-image:
+      radial-gradient(
+        circle at top right,
+        rgba(68, 117, 95, 0.09),
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at bottom left,
+        rgba(152, 165, 138, 0.09),
+        transparent 45%
+      );
+    line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+    color: hsl(var(--foreground));
+  }
+
+  a,
+  button,
+  [role="button"],
+  input,
+  textarea,
+  select {
+    transition:
+      color 180ms ease,
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
+  }
+
+  button:hover,
+  [role="button"]:hover {
+    transform: translateY(-1px);
+  }
+}
+
+/* View Transitions — page cross-fade */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.25s;
+  animation-timing-function: ease;
+}
+
+@layer utilities {
+  .font-classic {
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  }
+
+  .font-brand-hi {
+    font-family: "Hind", "Noto Sans Devanagari", sans-serif;
+    font-weight: 400;
+  }
+
+  .rounded-xl {
+    border-radius: 0.9rem;
+  }
+
+  .rounded-2xl {
+    border-radius: 1.05rem;
+  }
+
+  .rounded-3xl {
+    border-radius: 1.2rem;
+  }
+
+  .shadow-sm {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow,
+  .shadow-md {
+    box-shadow: var(--shadow-medium);
+  }
+
+  .shadow-lg,
+  .shadow-xl {
+    box-shadow: var(--shadow-large);
+  }
+}
