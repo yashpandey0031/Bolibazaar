@@ -20,9 +20,25 @@ import { connectDB } from "./config/db.config.js";
 
 export const app = express();
 
+const normalizeOrigin = (origin = "") => origin.replace(/\/+$/, "");
+const allowedOrigins = (env.origin || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean)
+  .map(normalizeOrigin);
+
 app.use(
   cors({
-    origin: env.origin,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+
+      const requestOrigin = normalizeOrigin(origin);
+      if (allowedOrigins.includes(requestOrigin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`), false);
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   }),
