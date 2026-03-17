@@ -42,7 +42,7 @@
 </td>
 <td width="33%" align="center">
 <b>Auction House</b><br><br>
-<a href="screenshots/auctionhouse.png"><img src="screenshots/auctionhouse.png" alt="Auction House" /></a>
+<a href="screenshots/auctionhouse.png"><img src="screenshots/Auctionhouse.png" alt="Auction House" /></a>
 </td>
 <td width="33%" align="center">
 <b>Admin Dashboard</b><br><br>
