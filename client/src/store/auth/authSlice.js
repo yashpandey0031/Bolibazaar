@@ -1,11 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { api, clearAuthToken, setAuthToken } from "../../config/api.js";
+import {
+  api,
+  clearAuthToken,
+  getAuthToken,
+  setAuthToken,
+} from "../../config/api.js";
 
 // Return user if loggedin
 export const checkAuth = createAsyncThunk(
   "auth/checkAuth",
   async (_, { rejectWithValue }) => {
     try {
+      const token = getAuthToken();
+      if (!token) {
+        clearAuthToken();
+        return rejectWithValue("Not authenticated");
+      }
       const response = await api.get(`/user`);
       return response.data;
     } catch (error) {
@@ -79,7 +89,7 @@ export const logout = createAsyncThunk(
 // initial auth state
 const initialState = {
   user: null,
-  loading: true,
+  loading: Boolean(getAuthToken()),
   error: null,
 };
 
