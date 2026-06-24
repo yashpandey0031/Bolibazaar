@@ -13,7 +13,6 @@ export const checkAuth = createAsyncThunk(
     try {
       const token = getAuthToken();
       if (!token) {
-        clearAuthToken();
         return rejectWithValue("Not authenticated");
       }
       const response = await api.get(`/user`);
